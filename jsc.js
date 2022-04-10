@@ -7,6 +7,9 @@ kaboom({
   background: [ 0, 0, 0, ],
 });
 
+const offsetX = ((width()/2) - 150);
+const offsetY = ((height()/2) - 150);
+
 loadImage("tree");
 
 scene("main", (args = {}) => {
@@ -17,12 +20,13 @@ scene("main", (args = {}) => {
       let spriteName = count.toString();
       add([
         sprite(spriteName),
-        pos(x * 100, y * 100),
+        pos((x * 100) + offsetX, (y * 100) + offsetY),
+        area(),
       ]);
     }
   }
 
-  //add([sprite("leavs"),pos(80, 80),]);
+  //an array , also a variable with the position of the empty space
 });
 
 go("main");
