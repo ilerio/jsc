@@ -11,13 +11,17 @@ kaboom({
 const offsetX = ((width()/2) - 150);
 const offsetY = ((height()/2) - 150);
 
-loadImage("tree");
+let images = ["tree", "cat", "dog", "food", "pattern", "cowboy"]
+
+loadImage(images[helper.getRandomInt(images.length-1)]);
 
 scene("main", (args = {}) => {
   let count = -1;
-  let skip = 0;
+  let skip = -1;
   let tileArray = [1,2,3,4,5,6,7,8,9];
   let gameArray = [];
+  let yBlank = -1;
+  let xBlank = -1;
 
   helper.shuffleArray(tileArray);
   skip = tileArray[8];
@@ -27,7 +31,9 @@ scene("main", (args = {}) => {
     for (let x = 0; x < 3; x++) {
       count++;
       if (count === 8) {
-        arr[x] = -1
+        arr[x] = -1;
+        yBlank = y;
+        xBlank = x;
         continue;
       }
       arr[x] = tileArray[count]
@@ -36,12 +42,60 @@ scene("main", (args = {}) => {
         sprite(spriteName),
         pos((x * 100) + offsetX, (y * 100) + offsetY),
         area(),
+        "tile"
       ]);
     }
     gameArray[y] = arr;
   }
 
-  
+  function move(tile) {
+    // console.log("yBlank: " + yBlank + " xBlank: " + xBlank);
+    // return;
+ 
+    let x = worldPosToIndex(tile.pos).x
+    let y = worldPosToIndex(tile.pos).y
+    let difX = Math.abs(x - xBlank);
+    let difY = Math.abs(y - yBlank);
+
+    if (difX + difY === 1) {
+      let tempY = y;
+      let tempX = x;
+
+      y = yBlank;
+      x = xBlank;
+
+      yBlank = tempY;
+      xBlank = tempX;
+
+      tile.pos = indexToWorldPos(y, x)
+    }
+  }
+
+  function worldPosToIndex(worldPos) {
+    let y = 0;
+    let x = 0;
+
+    y = Math.floor((worldPos.y - offsetY) / 100);
+    x = Math.floor((worldPos.x - offsetX) / 100);
+
+    return {"y": y, "x": x};
+  }
+
+  function indexToWorldPos(indexY, indexX) {
+    let y = 0;
+    let x = 0;
+
+    y = (indexY*100) + offsetY;
+    x = (indexX*100) + offsetX;
+
+    return pos(x,y);
+  }
+
+  onClick("tile", (tile) => {
+    move(tile);
+    console.log("world-y: " + mousePos().y + " world-x: " + mousePos().x)
+    console.log("index-y: " + worldPosToIndex(mousePos()).y + " index-x: " + worldPosToIndex(mousePos()).x)
+  });
 });
 
 go("main");
