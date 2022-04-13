@@ -61,13 +61,16 @@ scene("main", (args = {}) => {
       let tempY = y;
       let tempX = x;
 
+      
+
       y = yBlank;
       x = xBlank;
 
       yBlank = tempY;
       xBlank = tempX;
 
-      tile.pos = indexToWorldPos(y, x)
+      console.log("yIndex: " + indexToWorldPos(y, x).y + " xIndex: " + indexToWorldPos(y, x).x);
+      //tile.pos = indexToWorldPos(y, x)
     }
   }
 
