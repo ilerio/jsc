@@ -18,7 +18,7 @@ loadImage(images[helper.getRandomInt(images.length-1)]);
 scene("main", (args = {}) => {
   let count = -1;
   let skip = -1;
-  let tileArray = [1,2,3,4,5,6,7,8,9];
+  let tileArray = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
   let gameArray = [];
   let yBlank = -1;
   let xBlank = -1;
@@ -26,11 +26,11 @@ scene("main", (args = {}) => {
   helper.shuffleArray(tileArray);
   skip = tileArray[8];
 
-  for (let y = 0; y < 3; y++)  {
+  for (let y = 0; y < 4; y++)  {
     let arr = [];
-    for (let x = 0; x < 3; x++) {
+    for (let x = 0; x < 4; x++) {
       count++;
-      if (count === 8) {
+      if (count === 14) {
         arr[x] = -1;
         yBlank = y;
         xBlank = x;
@@ -40,7 +40,7 @@ scene("main", (args = {}) => {
       let spriteName = tileArray[count].toString();
       add([
         sprite(spriteName),
-        pos((x * 100) + offsetX, (y * 100) + offsetY),
+        pos((x * 75) + offsetX, (y * 75) + offsetY),
         area(),
         "tile"
       ]);
@@ -49,8 +49,6 @@ scene("main", (args = {}) => {
   }
 
   function move(tile) {
-    // console.log("yBlank: " + yBlank + " xBlank: " + xBlank);
-    // return;
  
     let x = worldPosToIndex(tile.pos).x
     let y = worldPosToIndex(tile.pos).y
@@ -69,8 +67,9 @@ scene("main", (args = {}) => {
       yBlank = tempY;
       xBlank = tempX;
 
-      console.log("yIndex: " + indexToWorldPos(y, x).y + " xIndex: " + indexToWorldPos(y, x).x);
-      //tile.pos = indexToWorldPos(y, x)
+      let movePos = indexToWorldPos(y, x)
+      
+      tile.pos = indexToWorldPos(y, x).pos
     }
   }
 
@@ -78,8 +77,8 @@ scene("main", (args = {}) => {
     let y = 0;
     let x = 0;
 
-    y = Math.floor((worldPos.y - offsetY) / 100);
-    x = Math.floor((worldPos.x - offsetX) / 100);
+    y = Math.floor((worldPos.y - offsetY) / 75);
+    x = Math.floor((worldPos.x - offsetX) / 75);
 
     return {"y": y, "x": x};
   }
@@ -88,16 +87,14 @@ scene("main", (args = {}) => {
     let y = 0;
     let x = 0;
 
-    y = (indexY*100) + offsetY;
-    x = (indexX*100) + offsetX;
+    y = (indexY*75) + offsetY;
+    x = (indexX*75) + offsetX;
 
     return pos(x,y);
   }
 
   onClick("tile", (tile) => {
     move(tile);
-    console.log("world-y: " + mousePos().y + " world-x: " + mousePos().x)
-    console.log("index-y: " + worldPosToIndex(mousePos()).y + " index-x: " + worldPosToIndex(mousePos()).x)
   });
 });
 
