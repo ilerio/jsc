@@ -1,4 +1,5 @@
 export function loadImage(image) {
+  loadSprite(image, "/sprites/"+image+".jpg");
   loadSpriteAtlas("/sprites/"+image+".jpg", {
     "1": {
       "x": 0,

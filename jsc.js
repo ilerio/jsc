@@ -11,9 +11,10 @@ kaboom({
 const offsetX = ((width()/2) - 150);
 const offsetY = ((height()/2) - 150);
 
-let images = ["tree", "cat", "dog", "food", "pattern", "cowboy"]
+let images = ["tree", "cat", "dog", "food", "pattern", "cowboy"];
+let selectedImage = images[helper.getRandomInt(images.length-1)];
 
-loadImage(images[helper.getRandomInt(images.length-1)]);
+loadImage(selectedImage);
 
 scene("main", (args = {}) => {
   let count = -1;
@@ -30,7 +31,7 @@ scene("main", (args = {}) => {
     let arr = [];
     for (let x = 0; x < 4; x++) {
       count++;
-      if (count === 14) {
+      if (count === 15) {
         arr[x] = -1;
         yBlank = y;
         xBlank = x;
@@ -48,6 +49,13 @@ scene("main", (args = {}) => {
     gameArray[y] = arr;
   }
 
+  // Refference Image
+  add([
+    sprite(selectedImage),
+    pos((5*75) + offsetX, offsetY),
+    scale(.5)
+  ]);
+
   function move(tile) {
  
     let x = worldPosToIndex(tile.pos).x
@@ -59,15 +67,11 @@ scene("main", (args = {}) => {
       let tempY = y;
       let tempX = x;
 
-      
-
       y = yBlank;
       x = xBlank;
 
       yBlank = tempY;
       xBlank = tempX;
-
-      let movePos = indexToWorldPos(y, x)
       
       tile.pos = indexToWorldPos(y, x).pos
     }
