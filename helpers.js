@@ -1,5 +1,5 @@
 export function getRandomInt(max) {
-  return Math.floor((Math.random() * max)+1);
+  return Math.floor((Math.random() * max));
 }
 
 // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
@@ -20,3 +20,14 @@ export function shuffleArray(array) {
 
   return array;
 }
+
+// By Tim Down
+// 
+export function arraysIdentical(a, b) {
+  var i = a.length;
+  if (i != b.length) return false;
+  while (i--) {
+      if (a[i] !== b[i]) return false;
+  }
+  return true;
+};

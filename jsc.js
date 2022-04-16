@@ -18,41 +18,44 @@ loadImage(selectedImage);
 
 scene("main", (args = {}) => {
   let count = -1;
-  let skip = -1;
-  let tileArray = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
-  let gameArray = [];
-  let yBlank = -1;
+  let initArray = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
+  let gameArray = [...initArray];
+  let blank = -1;
   let xBlank = -1;
+  let yBlank = -1;
+  const size = 75;
+  const referenceIndex = 5
+  const tileCount = 4;
 
-  helper.shuffleArray(tileArray);
-  skip = tileArray[8];
+  helper.shuffleArray(gameArray);
+  let i = 0;
+  do {
+    if (gameArray[i] === 16) blank = i;
+    i++;
+  } while (blank === -1 && i < gameArray.length);
 
-  for (let y = 0; y < 4; y++)  {
-    let arr = [];
-    for (let x = 0; x < 4; x++) {
+  for (let y = 0; y < tileCount; y++)  {
+    for (let x = 0; x < tileCount; x++) {
       count++;
-      if (count === 15) {
-        arr[x] = -1;
+      if (count === blank) {
         yBlank = y;
         xBlank = x;
         continue;
       }
-      arr[x] = tileArray[count]
-      let spriteName = tileArray[count].toString();
+      let spriteName = gameArray[count].toString();
       add([
         sprite(spriteName),
-        pos((x * 75) + offsetX, (y * 75) + offsetY),
+        pos((x * size) + offsetX, (y * size) + offsetY),
         area(),
         "tile"
       ]);
     }
-    gameArray[y] = arr;
   }
 
-  // Refference Image
+  // Reference Image
   add([
     sprite(selectedImage),
-    pos((5*75) + offsetX, offsetY),
+    pos((referenceIndex*size) + offsetX, offsetY),
     scale(.5)
   ]);
 
@@ -66,6 +69,12 @@ scene("main", (args = {}) => {
     if (difX + difY === 1) {
       let tempY = y;
       let tempX = x;
+      let blankIndex = index3dto2d(yBlank,xBlank);
+      let selectedIndex = index3dto2d(y,x);
+      let tempNum = gameArray[blankIndex];
+
+      gameArray[blankIndex] = gameArray[selectedIndex];
+      gameArray[selectedIndex] = tempNum;
 
       y = yBlank;
       x = xBlank;
@@ -74,15 +83,28 @@ scene("main", (args = {}) => {
       xBlank = tempX;
       
       tile.pos = indexToWorldPos(y, x).pos
+
+      isMoveWin();
     }
+  }
+
+  function index3dto2d(yIn, xIn) {
+    let count = -1; 
+    for (let y = 0; y < tileCount; y++) {
+      for (let x = 0; x < tileCount; x++) {
+        count++;
+        if (y === yIn && x === xIn) return count;
+      }
+    }
+    return -1;
   }
 
   function worldPosToIndex(worldPos) {
     let y = 0;
     let x = 0;
 
-    y = Math.floor((worldPos.y - offsetY) / 75);
-    x = Math.floor((worldPos.x - offsetX) / 75);
+    y = Math.floor((worldPos.y - offsetY) / size);
+    x = Math.floor((worldPos.x - offsetX) / size);
 
     return {"y": y, "x": x};
   }
@@ -91,10 +113,50 @@ scene("main", (args = {}) => {
     let y = 0;
     let x = 0;
 
-    y = (indexY*75) + offsetY;
-    x = (indexX*75) + offsetX;
+    y = (indexY*size) + offsetY;
+    x = (indexX*size) + offsetX;
 
     return pos(x,y);
+  }
+
+  function isMoveWin() {
+    if (helper.arraysIdentical(initArray, gameArray)) {
+      win();
+    } else {
+      notWin();
+    }
+  }
+
+  function win() {
+    add ([
+      text("You've got it!", {size: 18}),
+      pos((referenceIndex*size) + offsetX, (2*size) + offsetY + 5),
+      "win"
+    ]);
+
+    const btn = add([
+      text("new game?", {size: 18}),
+      pos((referenceIndex*size) + offsetX, (2*size) + offsetY + 25),
+      "win",
+      "win-btn",
+      area()
+    ]);
+
+    onHover("win-btn", (btn) => {
+      btn.color = rgb(0,255,0);
+      btn.scale = vec2(1.25);
+    }, (btn) => {
+      btn.color = rgb(255,255,255);
+      btn.scale = vec2(1);
+    });
+  }
+
+  onClick("win-btn", (btn) => {
+    location.reload();
+  });
+
+  function notWin() {
+    destroyAll("win");
   }
 
   onClick("tile", (tile) => {
