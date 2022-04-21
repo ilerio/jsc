@@ -2,7 +2,7 @@ export function getRandomInt(max) {
   return Math.floor((Math.random() * max));
 }
 
-// https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+// https://stackoverflow.com/a/2450976
 export function shuffleArray(array) {
   let currentIndex = array.length,  randomIndex;
 
@@ -21,8 +21,7 @@ export function shuffleArray(array) {
   return array;
 }
 
-// By Tim Down
-// 
+// https://stackoverflow.com/a/7837725
 export function arraysIdentical(a, b) {
   var i = a.length;
   if (i != b.length) return false;

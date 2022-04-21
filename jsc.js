@@ -1,7 +1,7 @@
 import kaboom from "https://unpkg.com/kaboom@next/dist/kaboom.mjs";
 //import kaboom from "https://unpkg.com/kaboom@2000.0.0/dist/kaboom.mjs"
 import {loadImage} from "./load.js"
-import * as helper from "./helpers.js"
+import * as helper from "./helper.js"
 
 kaboom({
   global: true,
